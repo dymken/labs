@@ -1,50 +1,63 @@
-#include <stdio.h>
+п»ї#include <stdio.h>
+#define wordcount 30
+#define maxlength 10
 
-char* sentence = "adj45  kfgr54k0 09mmbdsjk8 d   djhg87 4jfk4f djujshd 2345 rt.";
-// 20 61 65 67 34 35 20 20 
-/*
-* kfgrk
-* mmbdsjk
-* djhg
-* jfkf
-* ?
-* rt
-*/
+char* sentence = "adj45  kf-gr54k0 09mmbdsjk8 d   djhg87 4jFk4f djujshd 2345 rt.";
 
-// word
-//    0   1   2   3   4   5   6   7   8   9   10   
-//  | a | d | j | 4 | 5 | \0 |   |   |   |   |   |  
-
-void scan(char* sentence) {
-	int i = 0; // итератор по предложению
-	int j = 0; // итератор по слова
-	int k = 0; // подсчет кол-ва букв в слове
-	int is_space = 1; // признак того, что предыдущий символ является пробелом
+int scan(char* sentence) {
+	printf("original sentences = %s\n", sentence);
+	int i = 0; // РёС‚РµСЂР°С‚РѕСЂ РїРѕ РїСЂРµРґР»РѕР¶РµРЅРёСЋ
+	int j = 0; // РёС‚РµСЂР°С‚РѕСЂ РїРѕ СЃР»РѕРІР°
+	int k = 0; // РїРѕРґСЃС‡РµС‚ РєРѕР»-РІР° Р±СѓРєРІ РІ СЃР»РѕРІРµ
+	int wc = 0;
+	int is_space = 1; // РїСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ РїСЂРµРґС‹РґСѓС‰РёР№ СЃРёРјРІРѕР» СЏРІР»СЏРµС‚СЃСЏ РїСЂРѕР±РµР»РѕРј
 	char word[11] = "";
 	do {
-		char c = sentence[i++];
+		char c = sentence[i++]; // char c = sentence[i]; i = i + 1; // post-increment
 
+		// РџСЂРѕРІРµСЂРєР° РЅР° РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ СЃРёРјРІРѕР»РѕРІ, РґРѕРїСѓСЃРєР°РµС‚СЃСЏ СЃР»РµРґСѓСЋС‰РёР№ РЅР°Р±РѕСЂ: " .0..9A..Za..z"
+		if (!(c == ' ' || c == '.' || (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))) {
+			printf("ERROR: We found invalid char = '%c'\n", c);
+			return 3;
+		}
+
+		// РµСЃР»Рё РІСЃС‚СЂРµС‚РёР»Рё РЅРµ РїСЂРѕР±РµР» РёР»Рё С‚РѕС‡РєСѓ (С‚Рµ Р±СѓРєРІСѓ РёР»Рё С†РёС„СЂСѓ)
 		if (c != ' ' && c != '.') {
 			if (is_space == 1) {
 				j = 0;
 				k = 0;
 				is_space = 0;
 			}
-
-			if (c < '0' || c > '9') 
+			// РµСЃР»Рё СЌС‚Рѕ РЅРµ С†РёС„СЂР°
+			if (!(c >= '0' && c <= '9')) 
 				word[j++] = c;
 			k++;
+			if (k > maxlength) {
+				printf("ERROR: We have reached a constraint of a word's length (%i)\n", maxlength);
+				return 1;
+			}
 		}
 		else if (is_space == 0) {
 			word[j] = 0;
 			is_space = 1;
-			if (k % 2 == 0 && j != 0) // j != 0  -- убирает пустое слово
+			if (k % 2 == 0 && j != 0)  // j != 0  -- СѓР±РёСЂР°РµС‚ РїСѓСЃС‚РѕРµ СЃР»РѕРІРѕ
 				printf("%s\n", word);
+			wc++;
+			if (wc == wordcount) {
+				printf("ERROR: We have reached a constraint of %i words\n", wordcount);
+				return 2;
+			}
 		}
 	} while (sentence[i-1] != '.');
+	return 0;
 }
 
 
 int main(void) {
-	scan(sentence);
+	int result = scan(sentence);
+	if (result == 0)
+		printf("Program has finished successfully");
+	else
+		printf("Program has finished with error = %i", result);
+	return result;
 }
