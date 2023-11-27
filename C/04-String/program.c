@@ -33,7 +33,7 @@ int scan(char* sentence) {
 				word[j++] = c;
 			k++;
 			if (k > maxlength) {
-				printf("ERROR: We have reached a constraint of a word's length (%i)\n", maxlength);
+				printf("ERROR: We have reached word length limit (%i)\n", maxlength);
 				return 1;
 			}
 		}
@@ -43,8 +43,8 @@ int scan(char* sentence) {
 			if (k % 2 == 0 && j != 0)  // j != 0  -- убирает пустое слово
 				printf("%s\n", word);
 			wc++;
-			if (wc == wordcount) {
-				printf("ERROR: We have reached a constraint of %i words\n", wordcount);
+			if (wc > wordcount) {
+				printf("ERROR: We have reached sentence length limit (%i)\n", wordcount);
 				return 2;
 			}
 		}
